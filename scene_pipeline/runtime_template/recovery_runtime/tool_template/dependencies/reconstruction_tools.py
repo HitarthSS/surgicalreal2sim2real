@@ -83,7 +83,7 @@ TOOLS = {
     },
 }
 CASE_KEYS = {"case_id", "session_id", "split", "calibration_id", "baseline_m", "inputs",
-             "manual_interventions"}
+             "manual_interventions", "immutable_input_sha256", "observation_metadata"}
 INPUT_KEYS = {"left", "right", "depth_npy", "K", "thread_left_mask", "thread_right_mask",
               "needle_left_mask", "needle_right_mask", "left_occluder", "right_occluder"}
 CORE_INPUTS = {"left", "right", "depth_npy", "K"}
@@ -198,6 +198,21 @@ class ReconstructionSession:
         self.case = strict_json(self.case_path.read_text())
         if not isinstance(self.case, dict) or set(self.case) - CASE_KEYS:
             raise ValueError("Unknown case fields")
+        # Portable provenance is retained in the case and event ledger; it does
+        # not modify estimator inputs, priors, tool budgets or geometry checks.
+        hashes = self.case.get("immutable_input_sha256", {})
+        metadata = self.case.get("observation_metadata", {})
+        if not isinstance(hashes, dict) or not isinstance(metadata, dict):
+            raise ValueError("Invalid provenance metadata")
+        for digest in hashes.values():
+            if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
+                raise ValueError("Invalid immutable input hash")
+        for record in metadata.values():
+            if (not isinstance(record, dict) or set(record) != {"path", "sha256"}
+                    or not isinstance(record["path"], str) or not record["path"]
+                    or not isinstance(record["sha256"], str)
+                    or not re.fullmatch(r"[0-9a-f]{64}", record["sha256"])):
+                raise ValueError("Invalid observation metadata")
         for key in ("case_id", "session_id", "calibration_id"):
             if not isinstance(self.case.get(key), str) or not self.case[key].strip():
                 raise ValueError("Missing " + key)

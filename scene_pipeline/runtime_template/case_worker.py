@@ -71,7 +71,11 @@ def main():
  baseline_path=F/'perception/baseline/assessment.json'
  if not baseline_path.exists():
   from needle_tool_handoff import prepare
-  initial_case,requires_visual,working=prepare(read(F/'case.json'),None,F,'heuristic',F/'initial_tool_observations')
+  working=F/'initial_tool_observations/case.json'
+  if working.is_file():
+   initial_case=read(working);requires_visual=False
+  else:
+   initial_case,requires_visual,working=prepare(read(F/'case.json'),None,F,'heuristic',F/'initial_tool_observations')
   assert not requires_visual
   confidence=read(F/'class_confidence_state.json')
   assert confidence and all(initial_case['inputs'][k]==read(F/'case.json')['inputs'][k] for k in confidence['bindings'])
