@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "surgical-scene-pipeline"
+version = "0.1.0"
+description = "Stereo thread, rigid-needle and articulated-tool reconstruction with VLM repairs"
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+include = ["scene_pipeline"]
+namespaces = false
+
+[tool.setuptools.package-data]
+scene_pipeline = ["runtime_template/**/*", "resources/*.json"]

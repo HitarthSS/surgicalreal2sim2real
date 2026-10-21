@@ -1,0 +1,11 @@
+{
+  "sam3_checkpoint": "/data/youruser/models/sam3_epoch2.pt",
+  "sam3_sha256": "REPLACE_WITH_CHECKPOINT_SHA256",
+  "native_tracker": "/data/youruser/dependencies/online_dvrk_tracking_clean",
+  "legacy_assets": "/data/youruser/dependencies",
+  "ffs_root": "/data/youruser/dependencies/Fast-FoundationStereo",
+  "ffs_checkpoint": "/data/youruser/models/23-36-37/model_best_bp2_serialize.pth",
+  "container_image": "/data/youruser/containers/scene-pipeline-cu128.sif",
+  "bind_paths": [],
+  "path_overrides": {}
+}

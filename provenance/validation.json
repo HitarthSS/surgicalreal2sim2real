@@ -1,0 +1,12 @@
+{
+  "runner_unit_tests_passed": 6,
+  "full_pipeline_preflight_scenes": 10,
+  "export_read_only_smoke": {
+    "scenes": 1,
+    "controller_packages": 2,
+    "joint_angle_npzs_verified": 4,
+    "zip_integrity": true,
+    "full_stereo": true
+  },
+  "ten_scene_scientific_run_complete": false
+}

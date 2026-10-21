@@ -1,0 +1,24 @@
+{
+  "scenes": [{
+    "case_id": "snapshot_20261020_120000",
+    "difficulty": "hard",
+    "partition": "development",
+    "image_sha256": {"left": "REPLACE_WITH_LEFT_SHA256", "right": "REPLACE_WITH_RIGHT_SHA256"},
+    "calibration_path": "/data/youruser/data/scene01/calibration.json",
+    "robot_state_path": "/data/youruser/data/scene01/psm_state.json",
+    "case": {
+      "case_id": "snapshot_20261020_120000",
+      "session_id": "your_recording_session",
+      "split": "development",
+      "calibration_id": "your_calibration_identifier",
+      "baseline_m": 0.00682,
+      "scene_priors": {"single_thread": true},
+      "inputs": {
+        "left": "/data/youruser/data/scene01/left_rect.png",
+        "right": "/data/youruser/data/scene01/right_rect.png",
+        "K": "/data/youruser/data/scene01/K.csv",
+        "depth_npy": "/data/youruser/data/scene01/depth_meter.npy"
+      }
+    }
+  }]
+}

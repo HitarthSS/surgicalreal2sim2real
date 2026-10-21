@@ -1,0 +1,2 @@
+"""Stereo surgical-scene reconstruction runner."""
+__version__ = '0.1.0'

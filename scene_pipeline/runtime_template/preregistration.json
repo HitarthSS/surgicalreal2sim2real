@@ -1,0 +1,29 @@
+{
+  "controllers": [
+    "heuristic",
+    "agent"
+  ],
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "low",
+  "image_detail": "original",
+  "max_model_attempts_per_case": 12,
+  "max_tools_per_case": 10,
+  "retries": 0,
+  "concurrent_case_processes": 2,
+  "needle": "Existing free-radius fit, no new size prior or hidden extension",
+  "verifier": "Current object-aware v8, shared by both controllers",
+  "preprocessing": "Existing SAM3 checkpoint/FFS settings and four frozen shared SAM3 repair cards",
+  "single_thread_prior": "Inherited experimental assumption; not independently confirmed for this acquisition",
+  "accuracy_independently_measured": false,
+  "physics_validation": false,
+  "policy_training": false,
+  "resource_policy": {
+    "user_authorized_attempt_with_available_memory": true,
+    "min_free_gib": 6,
+    "per_process_cap_gib": 8,
+    "gpu_workers": 1,
+    "gpu_batch_size": 2,
+    "gpu_device": "capacity-selected; prefer0",
+    "oom_is_failure": true
+  }
+}

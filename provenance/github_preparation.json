@@ -1,0 +1,17 @@
+{
+  "scope": "Standalone GitHub source repository; original research workspace preserved",
+  "changes": [
+    "Documentation and examples reorganized",
+    "CPU-only CI and repository-content checker",
+    "CLI import-safe entry point",
+    "Native reference hashes included as package resources",
+    "Explicit calibration/state metadata and immutable image hashes bound during preparation",
+    "Regression tests for metadata paths and preservation of existing outputs"
+  ],
+  "unit_tests_passed": 9,
+  "scientific_inference_performed_during_preparation": false,
+  "remote_configured": false,
+  "committed": false,
+  "pushed": false,
+  "repository_wide_license_assigned": false
+}

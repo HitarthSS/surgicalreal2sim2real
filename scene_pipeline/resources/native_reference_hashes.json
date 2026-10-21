@@ -1,0 +1,11 @@
+{
+  "diffcali/eval_dvrk/batch_optimize.py": "b022ef9c608a5407282337c4d0f7149ac869fb86d01ac65f37b9b7ee9c049c4c",
+  "diffcali/eval_dvrk/trackers.py": "381246e5e85687b28cbf385f06baec4f500bf6117f8adc750923182a8b7293ce",
+  "diffcali/eval_dvrk/LND_fk.py": "a4b07f10f317fac6b989e6efe4fda04ef07f0fad444e3da61bb5aae7be75cea4",
+  "scripts/video_calibration.py": "36d3accf3a55cf2c28c142f2b580bfec56cb4725adba23cb19d96756f0e02840",
+  "ContourTipNet/models/cnn_model.pth": "e474115fb199e3b6c26defbfcc16827888fca156f710adb94ac8447edd86232e",
+  "urdfs/dVRK/meshes/low_res_shaft_multi_cylinder.ply": "ca427bc31d1f2ba8e9aec8c632a0c5874dcef1f13f6c9089183245fd4bc7b557",
+  "urdfs/dVRK/meshes/low_res_logo_low_res_1.ply": "aff384fffb56f75f20a9a7c499dbfb62f2d66a4dff8bff6421be24c27a6a0924",
+  "urdfs/dVRK/meshes/low_res_jawright_lowres.ply": "e7af63abceb93b70f05a1f1ce655ea0c6f3365c19a57725d399f1c7c6080e141",
+  "urdfs/dVRK/meshes/low_res_jawleft_lowres.ply": "46f7908dbc416dd52191acadd8f53f667167018ec68fc08a59e452ed4b8516f1"
+}
