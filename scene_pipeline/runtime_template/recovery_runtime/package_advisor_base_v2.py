@@ -38,6 +38,36 @@ def copy(source, target):
         shutil.copy2(source, target)
 
 
+def observation_snapshot(source):
+    """Bind the exporter to this case's images and explicit calibration paths."""
+    case = json.loads((source / 'case.json').read_text())
+    raw = Path(case['inputs']['left']).parent
+    metadata = case.get('observation_metadata', {})
+    files = {side + '_rect.png': Path(case['inputs'][side]) for side in ['left', 'right']}
+    for name in ['calibration.json', 'psm_state.json']:
+        record = metadata.get(name)
+        path = Path(record['path']) if record else raw / name
+        if path.is_file():
+            if record:
+                assert sha(path) == record['sha256'], 'Observation metadata changed: ' + name
+            files[name] = path
+        elif record or name == 'calibration.json':
+            raise FileNotFoundError('Case observation missing: ' + str(path))
+    for side in ['left', 'right']:
+        expected = case.get('immutable_input_sha256', {}).get(side)
+        if expected:
+            assert sha(files[side + '_rect.png']) == expected, 'Observation image changed'
+    snapshot = ROOT / 'observation_context' / source.name
+    snapshot.mkdir(parents=True, exist_ok=True)
+    for name, path in files.items():
+        target = snapshot / name
+        if target.exists():
+            assert sha(target) == sha(path), 'Existing observation context changed: ' + name
+        else:
+            shutil.copy2(path, target)
+    return snapshot
+
+
 def one(source, method, revision):
     cid = source.name
     short = cid.rsplit('_', 1)[1]
@@ -82,7 +112,7 @@ def one(source, method, revision):
         if not context.exists():
             np.savez_compressed(context, needle_points_newton_m=transform(needle['points_m'], CAMERA_TO_NEWTON),
                                 needle_inferred=needle['inferred'], needle_tube_radius_m=needle['tube_radius_m'])
-    manifest = build(RAW / cid, out, export_summary if connected else None, context)
+    manifest = build(observation_snapshot(source), out, export_summary if connected else None, context)
     status = 'connected_proposal' if connected else ('checked_partial' if report.get('numerical_checks_passed') else 'rejected_or_conversion_failed')
     manifest.update(controller=method, scientific_revision=revision, reconstruction_status=status,
                     all_current_endpoints_assessed=(summary.get('completion') or {}).get('all_current_endpoints_assessed', False),
