@@ -89,6 +89,7 @@ python3 scripts/check_repository.py
 ## More information
 
 - [Architecture](docs/architecture.md)
+- [Optional background surfaces and materials](docs/background.md)
 - [Contributing](CONTRIBUTING.md)
 - [Third-party components](THIRD_PARTY.md)
 - [Licensing notice](LICENSE_NOTICE.md)

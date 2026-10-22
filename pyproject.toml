@@ -9,6 +9,9 @@ description = "Stereo thread, rigid-needle and articulated-tool reconstruction w
 readme = "README.md"
 requires-python = ">=3.10"
 
+[project.optional-dependencies]
+background = ["numpy>=1.24", "Pillow>=10", "scipy>=1.10"]
+
 [tool.setuptools.packages.find]
 include = ["scene_pipeline"]
 namespaces = false

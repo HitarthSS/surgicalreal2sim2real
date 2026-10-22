@@ -79,6 +79,15 @@ def main(run_root):
    toolrows.append(dict(visual_instance=name,geometry=f'tools/{name}/tool_geometry.npz',pose_and_joint_angles=f'tools/{name}/pose_and_joint_angles.npz',joint_angles_json=f'tools/{name}/joint_angles.json',accepted_numerical_hypothesis=accepted,robot_arm_identity=None))
    arrays[name+'_vertices_newton_m']=world;arrays[name+'_faces']=faces;arrays[name+'_distal_joints_rad']=q;arrays[name+'_T_camera_from_native_frame4']=pose
   save(out/'joint_angles.json',dict(fitted_tools=jointrows,recorded_robot_states='observations/psm_state.json' if (out/'observations/psm_state.json').exists() else None,recorded_base_joint_states_are_separate_from_visual_fits=True,full_arm_mapping_available=False))
+  background=None
+  if (F/'background/background.json').exists():
+   from .background_export import export_background
+   background=export_background(F,out,CAMERA_TO_NEWTON)
+   if background.get('geometry'):
+    z=load(out/background['geometry']);arrays['background_vertices_camera_m']=z['vertices_camera_m'];arrays['background_vertices_newton_m']=z['vertices_newton_m'];arrays['background_faces']=z['faces']
+    # The standalone textured OBJ is referenced in scene.json. The combined OBJ
+    # additionally shows the support surface using a neutral background material.
+    add('background',z['vertices_newton_m'],z['faces'],'background')
   np.savez_compressed(out/'newton_all_geometry.npz',**arrays);(out/'geometry').mkdir(exist_ok=True);(out/'geometry/scene_newton_m.obj').write_text(obj);(out/'geometry/scene.mtl').write_text('newmtl thread\nKd 0.2 0.9 0.2\nnewmtl needle\nKd 0.2 0.8 0.9\nnewmtl tool\nKd 0.7 0.3 0.8\nnewmtl inferred\nKd 1.0 0.5 0.1\n')
   cp(D/'review'/method/(cid+'.jpg'),out/'review/overlay.jpg')
   for name in ('history.json','endpoint_ledger.json'):
@@ -86,6 +95,9 @@ def main(run_root):
   save(out/'diagnostics/thread_report.json',report);save(out/'provenance.json',dict(source_summary_sha256=sha(F/method/'summary.json') if (F/method/'summary.json').exists() else None,source_geometry_hashes=protected,scientific_outputs_modified=False,source_run=D.name))
   scene=dict(schema='reconstruction_collection_scene_v1',scene_id=cid,provider=provider,controller=method,difficulty=row['difficulty'],partition=row.get('partition','development'),thread=dict(fragment_count=fragment_count,checks_passed=bool(report.get('numerical_checks_passed')),assembly_complete=fragment_count==1 and bool(report.get('numerical_checks_passed')),fragments='thread_fragments.npz' if candidate else None,connected_curve='thread_curve.npz' if (out/'thread_curve.npz').exists() else None),needle='needle_geometry.npz' if needle_available else None,visual_tools=toolrows,attachment_contract='newton/attachment_contract.json' if anchor else None,all_geometry='newton_all_geometry.npz',inspection_obj='geometry/scene_newton_m.obj',joint_angles='joint_angles.json',units='meters_provisional',T_newton_from_camera=CAMERA_TO_NEWTON.tolist(),independent_accuracy_measured=False,physics_validated=False,full_arm_mapping_available=False)
   save(out/'scene.json',scene);(out/'README.md').write_text('Start with scene.json. OBJ includes all available estimated thread fragments, rigid needle and distal tools. Fragments remain separate. Orange/inferred geometry is a hypothesis. Distal tool joint angles are in joint_angles.json and tools/tool_A or tool_B/pose_and_joint_angles.npz (Joint5,Joint6,Joint7,Joint8; radians and degrees). Fitted visual tool IDs are not assigned to robot arms. Recorded robot states, when available, are separate observations. No full-arm camera-to-robot mapping or Newton motion validation is supplied. Thread visualization radius0.15mm is an unmeasured assumption. Partial and failed reconstructions remain indexed.\n')
+  if background:
+   scene['background']=background;save(out/'scene.json',scene)
+   with (out/'geometry/scene.mtl').open('a') as f:f.write('newmtl background\nKd 0.35 0.4 0.5\n')
   assert all(sha(p)==h for p,h in protected.items());files={str(p.relative_to(out)):sha(p) for p in out.rglob('*') if p.is_file()};save(out/'package_verified.json',dict(files=files,source_geometry_unchanged=True));return dict(scene_id=cid,controller=method,difficulty=row['difficulty'],thread_fragments=fragment_count,thread_checked=bool(report.get('numerical_checks_passed')),needle_available=needle_available,tools=len(toolrows),tools_with_joint_angles=len(jointrows),path=str((out/'scene.json').relative_to(root)))
 
  rows=read(R/'scope.json')['scenes'];result=[]

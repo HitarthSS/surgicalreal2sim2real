@@ -42,6 +42,16 @@ def main(root):
     stage='full_pipeline';elapsed=run([sys.executable,str(C/'case_worker.py'),str(C),cid],F/'run_pipeline.log',env,3600,key)
     result=json.loads((F/'case_result.json').read_text());row.update(state=result['status'],processing_completed=True,model_attempts=result['model_attempts'],component_errors=result.get('errors',[]),preprocessing_seconds=pre,pipeline_seconds=elapsed)
    except Exception as e:row.update(state='failed_preserved',stage=stage,error=str(e).replace(key,'[REDACTED]'))
+   if cfg.get('background',{}).get('enabled'):
+    # Optional background failure never discards or reruns foreground geometry.
+    began_background=time.monotonic()
+    try:
+     from .background_stage import run_case as build_background
+     os.environ['ISMR_API_STATE_DIR']=str(root/'API_state')
+     background=build_background(F/'case.json',F/'background',cfg['background'],key)
+     row['background']=dict(state=background['status'],selection_source=background['selection_source'])
+    except Exception as error:row['background']=dict(state='failed_preserved',error_type=type(error).__name__)
+    row['background_seconds']=time.monotonic()-began_background
    row.update(elapsed_seconds=time.monotonic()-begin,scientific_conversion_not_implied=True);save(done,row);rows.append(row);save(root/'progress.json',dict(completed=len(rows),total=len(scope['scenes']),rows=rows));print(json.dumps(row),flush=True)
   verify_sources(root)
   save(root/'queue_complete.json',dict(completed=len(rows),total=len(scope['scenes']),rows=rows,all_processing_terminal=True,independent_accuracy_measured=False))

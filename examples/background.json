@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "vlm": false,
+  "stride": 8,
+  "foreground_margin_px": 3,
+  "plane_tolerance_m": 0.002,
+  "max_edge_m": 0.01
+}

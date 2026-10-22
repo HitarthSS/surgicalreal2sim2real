@@ -4,7 +4,7 @@ from contextlib import contextmanager
 import email.utils,fcntl,json,os,random,re,time
 
 QUOTA_CODES={'insufficient_quota','credit_balance_exhausted','organization_spend_limit_exceeded','project_spend_limit_exceeded','organization_usage_limit_exceeded','billing_hard_limit_reached'}
-STAGE_CAPS={'perception':5,'agent_model_requests':12,'tool_agent':5,'needle_size_refinement':1}
+STAGE_CAPS={'perception':5,'agent_model_requests':12,'tool_agent':5,'needle_size_refinement':1,'background':1}
 
 class ProviderBlocked(RuntimeError):pass
 class AttemptBudgetExhausted(RuntimeError):pass
